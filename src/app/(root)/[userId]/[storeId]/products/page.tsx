@@ -35,11 +35,11 @@ const ProductsPage = async ({
 
 
   return (
-    <div className="py-10">
+    <div className="py-5">
       <div className="flex items-center justify-end py-4">
         {/* <FilterSort /> */}
         <Link href={`/${params.userId}/${params.storeId}/products/new`}>
-          <Button>Add product</Button>
+          <Button className="text-black dark:text-white bg-secondary dark:bg-dark-secondary">Add product</Button>
         </Link>
       </div>
       <DataTable columns={columns} data={formattedProducts} />

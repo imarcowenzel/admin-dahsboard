@@ -29,7 +29,7 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
     <div className="flex-[2] flex items-center justify-between mt-5 gap-x-5">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 w-full">
         {cardsData.map((card) => (
-          <Card className="w-full">
+          <Card key={card.title} className="w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {card.title}

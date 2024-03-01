@@ -15,7 +15,6 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
-  
   const { user } = useUser();
   const { userId, storeId } = useParams();
   const pathname = usePathname();
@@ -44,12 +43,13 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sticky top-10 flex flex-col gap-5 overflow-hidden">
+    <div className="flex fixed top-5 flex-col gap-5 overflow-hidden">
+
       <div className="gap-5 flex items-center justify-between">
-        <div className="gap-5 flex items-center justify-start">
+        <div className="gap-3 flex items-center justify-start">
           <UserButton afterSignOutUrl="/sign-in" />
-          <span className="text-sm font-semibold">
-            {user?.username || user?.firstName}
+          <span className="text-sm font-medium">
+            {user?.username || user?.firstName || "User"}
           </span>
         </div>
         <ModeToggle />
@@ -61,8 +61,9 @@ const Sidebar = () => {
             <Link
               href={item.path}
               className={cn(
-                `p-5 flex items-center gap-3 rounded-md dark:hover:bg-slate-800 hover:bg-gray-300`,
-                pathname === item.path && "dark:bg-slate-800 bg-gray-300"
+                `py-5 pl-3 flex items-center gap-3 rounded-md dark:hover:bg-slate-800 hover:bg-gray-300`,
+                pathname === item.path &&
+                  "dark:bg-slate-800 bg-gray-300 font-semibold"
               )}
             >
               <item.icon />
@@ -71,7 +72,8 @@ const Sidebar = () => {
           </li>
         ))}
       </ul>
-    </aside>
+
+    </div>
   );
 };
 

@@ -15,7 +15,7 @@ const HomePage = async () => {
   });
 
   return (
-    <main className="flex flex-col h-svh items-center justify-center gap-5 p-5 bg-gray-200 dark:bg-gray-800">
+    <main className="flex flex-col h-svh items-center justify-center gap-5 p-5 bg-secondary dark:bg-dark-primary">
       <h1 className="font-medium text-xl md:text-2xl">
         Welcome, {user?.username || user?.firstName || "User"}!
       </h1>

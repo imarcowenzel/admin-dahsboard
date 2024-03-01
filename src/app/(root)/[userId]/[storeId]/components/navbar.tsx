@@ -1,20 +1,22 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import { usePathname } from "next/navigation";
 
 import StoreSwitcher from "@/components/store-swticher";
-import prismadb from "@/lib/prismadb";
+import { Store } from "@prisma/client";
+import MobileNavbar from "./mobile-navbar";
 
-const Navbar = async ({ params }: { params?: { userId: string } }) => {
-
-  const stores = await prismadb.store.findMany({
-    where: {
-      userId: params?.userId,
-    },
-  });
-
-  if (!stores) redirect("/");
+const Navbar = ({ stores }: { stores: Store[] }) => {
+  
+  const pathname = usePathname();
+  const title = pathname.split("/").pop();
 
   return (
-    <nav className="rounded-md flex items-center justify-end dark:bg-slate-900 bg-gray-200 p-5">
+    <nav className="rounded-md flex items-center justify-between dark:bg-dark-secondary bg-secondary p-5 gap-5">
+      <div className="flex items-center gap-2">
+        <MobileNavbar />
+        <h1 className="md:text-lg font-medium capitalize">{title}</h1>
+      </div>
       <StoreSwitcher stores={stores} />
     </nav>
   );

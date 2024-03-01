@@ -1,18 +1,34 @@
+import { redirect } from "next/navigation";
 import React from "react";
 
+import prismadb from "@/lib/prismadb";
 import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
 
-const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
+const DashboardLayout = async ({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { userId: string };
+}) => {
+  const stores = await prismadb.store.findMany({
+    where: {
+      userId: params?.userId,
+    },
+  });
+
+  if (!stores) redirect("/");
+
   return (
     <div className="flex">
-      <div className="flex-[1] p-5 min-h-svh dark:bg-slate-900 bg-gray-200">
+      <aside className="flex-[1] hidden md:block p-5 min-h-svh dark:bg-dark-secondary bg-secondary">
         <Sidebar />
-      </div>
-      <div className="flex-[4] p-5">
-        <Navbar />
+      </aside>
+      <main className="md:flex-[5] p-5 w-full">
+        <Navbar stores={stores} />
         {children}
-      </div>
+      </main>
     </div>
   );
 };
