@@ -12,7 +12,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Admin - Ecommerce",
+  title: "Admin",
   description: "Admin dashboard for Sneaker Peek",
 };
 

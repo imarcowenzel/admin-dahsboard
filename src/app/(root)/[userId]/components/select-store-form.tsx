@@ -23,28 +23,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const formSchema = z.object({
+const selectStoreSchema = z.object({
   store: z.string().min(2, {
     message: "Please, select a store.",
   }),
 });
 
+type SelectStoreSchema = z.infer<typeof selectStoreSchema>;
+
 const SelectStoreForm = ({ stores }: { stores: Store[] }) => {
   const router = useRouter();
-  const params = useParams();
+  const { userId } = useParams();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SelectStoreSchema>({
+    resolver: zodResolver(selectStoreSchema),
     defaultValues: {
       store: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const selectedStore = stores.find((store) => store.name === values.store);
-    if (selectedStore) {
-      router.push(`${params.userId}/${selectedStore.id}/dashboard`);
-    }
+  async function onSubmit(values: SelectStoreSchema) {
+    router.push(`${userId}/${values.store}/dashboard`);
   }
 
   return (
@@ -66,7 +65,8 @@ const SelectStoreForm = ({ stores }: { stores: Store[] }) => {
                   {stores?.map((store) => (
                     <SelectItem
                       key={store.id}
-                      value={store.name}
+                      value={store.id}
+                      disabled={form.formState.isSubmitting}
                       className="cursor-pointer"
                     >
                       {store.name}
@@ -79,7 +79,7 @@ const SelectStoreForm = ({ stores }: { stores: Store[] }) => {
           )}
         />
         <div className="w-full flex justify-end">
-          <Button type="submit">Continue</Button>
+          <Button disabled={form.formState.isSubmitting}>Continue</Button>
         </div>
       </form>
     </Form>

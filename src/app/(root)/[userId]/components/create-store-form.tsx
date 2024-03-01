@@ -13,30 +13,32 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
+const createStoreSchema = z.object({
   name: z.string().min(2, {
     message: "Store name must be at least 2 characters.",
   }),
 });
 
-type FormSchema = z.infer<typeof formSchema>;
+type CreateStoreSchema = z.infer<typeof createStoreSchema>;
 
 const CreateStoreForm = () => {
+  
   const router = useRouter();
   const params = useParams();
 
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateStoreSchema>({
+    resolver: zodResolver(createStoreSchema),
     defaultValues: {
       name: "",
     },
   });
 
-  async function onSubmit(values: FormSchema) {
+  async function onSubmit(values: CreateStoreSchema) {
     try {
       const store = await axios.post("/api/stores", values);
       toast.success("Store created!");
@@ -55,14 +57,14 @@ const CreateStoreForm = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Store name</FormLabel>
               <FormControl>
-                <Input placeholder="Store name..." {...field} />
+                <Input placeholder="Enter store name..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <div className="w-full flex justify-end">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {!form.formState.isSubmitting ? "Create" : "Creating..."}
