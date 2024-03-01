@@ -1,18 +1,19 @@
 "use client";
 
+import StoreSwitcher from "@/components/store-swticher";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useUser } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { Store } from "@prisma/client";
 import {
   LayoutDashboardIcon,
   LucideIcon,
@@ -22,12 +23,13 @@ import {
   ShoppingCartIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
-const MobileNavbar = () => {
+const MobileNavbar = ({ stores }: { stores: Store[] }) => {
   const { user } = useUser();
   const { userId, storeId } = useParams();
   const pathname = usePathname();
+  const router = useRouter();
 
   const menuItems: { title: string; path: string; icon: LucideIcon }[] = [
     {
@@ -64,28 +66,41 @@ const MobileNavbar = () => {
       </SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
-          <SheetTitle></SheetTitle>
-          <SheetDescription></SheetDescription>
+          <div className="gap-5 py-5 flex items-center justify-between">
+            <div className="gap-3 flex items-center justify-start">
+              <UserButton afterSignOutUrl="/sign-in" />
+              <span className="text-sm font-medium">
+                {user?.username || user?.firstName || "User"}
+              </span>
+            </div>
+            <ModeToggle />
+          </div>
         </SheetHeader>
+
         <ul className="flex flex-col gap-y-2 py-5">
           {menuItems.map((item) => (
-            <li key={item.title}>
-              <Link
-                href={item.path}
-                className={cn(
-                  `py-5 pl-3 flex items-center gap-3 rounded-md dark:hover:bg-slate-800 hover:bg-gray-300`,
-                  pathname === item.path &&
-                    "dark:bg-slate-800 bg-gray-300 font-semibold"
-                )}
-              >
-                <item.icon />
-                {item.title}
-              </Link>
-            </li>
+            <SheetClose asChild>
+              <li key={item.title}>
+                <SheetClose className="w-full">
+                  <button
+                    onClick={() => router.push(item.path)}
+                    className={cn(
+                      `py-5 pl-3 w-full flex items-center gap-3 rounded-md dark:hover:bg-slate-800 hover:bg-gray-300`,
+                      pathname === item.path &&
+                        "dark:bg-slate-800 bg-gray-300 font-semibold"
+                    )}
+                  >
+                    <item.icon />
+                    {item.title}
+                  </button>
+                </SheetClose>
+              </li>
+            </SheetClose>
           ))}
         </ul>
+
         <SheetFooter>
-          <SheetClose asChild></SheetClose>
+          <StoreSwitcher stores={stores} />
         </SheetFooter>
       </SheetContent>
     </Sheet>

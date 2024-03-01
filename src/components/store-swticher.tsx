@@ -22,7 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Store } from "@prisma/client";
 
-const StoreSwitcher = ({ stores }: { stores: Store[] }) => {
+const StoreSwitcher = ({ stores, className }: { stores: Store[], className?: string }) => {
   const { userId, storeId } = useParams();
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -40,7 +40,7 @@ const StoreSwitcher = ({ stores }: { stores: Store[] }) => {
   };
 
   return (
-    <div className="mt-auto flex justify-center">
+    <div className={className}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
