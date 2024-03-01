@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  id        String    @id @default(uuid())
+  name      String
+  userId    String
+  products  Product[] @relation("StoreToProduct")
+  orders    Order[]   @relation("StoreToOrder")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  storeId     String
+  store       Store    @relation("StoreToProduct", fields: [storeId], references: [id])
+  photo       String
+  name        String
+  sku         String
+  description String   @db.VarChar(600)
+  price       Decimal
+  discount    Decimal
+  category    String
+  sizes       String
+  isArchived  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation("StoreToOrder", fields: [storeId], references: [id])
+  isPaid    Boolean  @default(false)
+  phone     String   @default("")
+  address   String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  orderId   String
+  productId String
+
+  @@index([orderId])
+  @@index([productId])
+}
