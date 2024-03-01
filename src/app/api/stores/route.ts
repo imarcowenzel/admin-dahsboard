@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: Request): Promise<Store | NextResponse> {
+export async function POST(req: Request) {
   try {
     const { userId } = auth();
 
