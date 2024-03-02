@@ -73,7 +73,7 @@ const ProductForm = ({ initialData }: { initialData: Product | null }) => {
 
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col lg:w-1/2 gap-y-5"
+          className="flex flex-col w-full lg:w-1/2 gap-y-5"
         >
 
           <PhotoInput
