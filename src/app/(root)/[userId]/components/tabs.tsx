@@ -12,6 +12,7 @@ import CreateStoreForm from "./create-store-form";
 import SelectStoreForm from "./select-store-form";
 
 const MainTabs = ({ stores }: { stores: Store[] }) => {
+  
   if (!stores || stores.length === 0) {
     return (
       <Card>
@@ -30,10 +31,10 @@ const MainTabs = ({ stores }: { stores: Store[] }) => {
 
   return (
     <Tabs defaultValue="stores" className="w-full md:w-[400px]">
-        <TabsList>
-          <TabsTrigger value="stores">Stores</TabsTrigger>
-          <TabsTrigger value="create">Create</TabsTrigger>
-        </TabsList>
+      <TabsList>
+        <TabsTrigger value="stores">Stores</TabsTrigger>
+        <TabsTrigger value="create">Create</TabsTrigger>
+      </TabsList>
       <TabsContent value="stores">
         <Card>
           <CardHeader>

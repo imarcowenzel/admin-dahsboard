@@ -18,6 +18,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   onConfirm,
   loading,
 }) => {
+  
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

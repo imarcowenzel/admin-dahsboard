@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import * as z from "zod";
 
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
@@ -21,14 +20,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-const settingsSchema = z.object({
-  name: z.string().min(2),
-});
-
-type SettingsSchema = z.infer<typeof settingsSchema>;
+import { settingsSchema } from "@/schemas/product-schema";
+import { SettingsSchema } from "@/types";
 
 const SettingsForm = ({ initialData }: { initialData: Store }) => {
+  
   const [isOpen, setOpen] = useState<boolean>(false);
   const router = useRouter();
 
@@ -45,7 +41,7 @@ const SettingsForm = ({ initialData }: { initialData: Store }) => {
       router.refresh();
       toast.success("Store updated.");
     } catch (error: any) {
-      toast.error("Something went wrong.");
+      toast.error("Failed to update the store. Please try again.");
     }
   }
 
@@ -55,15 +51,15 @@ const SettingsForm = ({ initialData }: { initialData: Store }) => {
       router.refresh();
       router.push("/");
       toast.success("Store deleted.");
-    } catch (error) {
-      toast.error("Something went wrong.");
+    } catch (error: any) {
+      toast.error("Failed to update the store. Please try again.");
     } finally {
       setOpen(false);
     }
   }
 
   return (
-    <div className="mt-5 flex justify-between w-full">
+    <section className="mt-5 flex flex-col lg:flex-row gap-5 justify-between w-full">
       <AlertModal
         isOpen={isOpen}
         loading={form.formState.isSubmitting}
@@ -74,14 +70,14 @@ const SettingsForm = ({ initialData }: { initialData: Store }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex gap-x-2 items-end"
+          className="flex gap-x-5 items-end lg:justify-start justify-between w-full"
         >
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Store name</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -94,23 +90,30 @@ const SettingsForm = ({ initialData }: { initialData: Store }) => {
             )}
           />
 
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            Save changes
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="text-black dark:text-white bg-secondary dark:bg-dark-secondary"
+          >
+            {!form.formState.isSubmitting ? "Save change" : "Saving..."}
           </Button>
         </form>
-        <div className="flex items-end">
-          <Button
-            type="button"
-            disabled={form.formState.isSubmitting}
-            onClick={() => setOpen(true)}
-            variant="destructive"
-            aria-label="Delete store"
-          >
-            <TrashIcon className="h-4 w-4" />
-          </Button>
-        </div>
       </Form>
-    </div>
+
+      <div className="flex items-end">
+        <Button
+          type="button"
+          disabled={form.formState.isSubmitting}
+          onClick={() => setOpen(true)}
+          variant="destructive"
+          aria-label="Delete store"
+          className="flex gap-2 items-center w-full"
+        >
+          <TrashIcon className="h-4 w-4" />
+          Delete store
+        </Button>
+      </div>
+    </section>
   );
 };
 

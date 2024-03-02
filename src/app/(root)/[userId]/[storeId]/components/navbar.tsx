@@ -7,6 +7,7 @@ import { Store } from "@prisma/client";
 import MobileNavbar from "./mobile-navbar";
 
 const Navbar = ({ stores}: { stores: Store[] }) => {
+  
   const pathname = usePathname();
   const title = pathname.split("/").pop();
 

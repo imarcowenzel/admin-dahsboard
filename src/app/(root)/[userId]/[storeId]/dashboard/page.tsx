@@ -1,4 +1,9 @@
-import { CreditCardIcon, DollarSignIcon, PackageIcon } from "lucide-react";
+import {
+  CreditCardIcon,
+  DollarSignIcon,
+  LucideIcon,
+  PackageIcon,
+} from "lucide-react";
 
 import { getStockCount } from "@/actions/get-stock-count";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +12,7 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
 
   const stockCount = await getStockCount(params.storeId);
 
-  const cardsData = [
+  const cardsData: { title: string; icon: LucideIcon; content: number }[] = [
     {
       title: "Total Revenue",
       icon: DollarSignIcon,
@@ -24,9 +29,9 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
       content: stockCount,
     },
   ];
-
+  
   return (
-    <div className="flex-[2] flex items-center justify-between mt-5 gap-x-5">
+    <section className="flex-[2] flex items-center justify-between mt-5 gap-x-5">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 w-full">
         {cardsData.map((card) => (
           <Card key={card.title} className="w-full">
@@ -42,7 +47,7 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
           </Card>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
