@@ -7,6 +7,10 @@ export async function GET(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
+    
+    const { searchParams } = new URL(req.url);
+    const name = searchParams.get("name") || undefined;
+
     if (!params.productId) {
       return new NextResponse("Product id is required", { status: 400 });
     }
@@ -15,6 +19,7 @@ export async function GET(
       where: {
         storeId: params.storeId,
         id: params.productId,
+        name,
       },
     });
 

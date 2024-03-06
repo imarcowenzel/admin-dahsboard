@@ -1,7 +1,5 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
-import { Store } from "@prisma/client";
-import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -20,19 +18,18 @@ export async function GET(
         price,
         isArchived: false,
       },
-      orderBy: [
-        {
-          createdAt: "asc", // Ordenar pelo createdAt em ordem ascendente
-        },
-        {
-          price: "desc", // Em seguida, ordenar pelo price em ordem descendente
-        },
-      ],
+      orderBy: {
+        createdAt: "asc", // Ordenar pelo createdAt em ordem ascendente
+      },
     });
+
+    console.log("[PRODUCTS_GET] Params:", params);
+    console.log("[PRODUCTS_GET] Query Params:", req.url);
 
     return NextResponse.json(products);
   } catch (error) {
     console.log("[PRODUCTS_GET]", error);
+
     return new NextResponse("Internal error", { status: 500 });
   }
 }
@@ -42,7 +39,6 @@ export async function POST(
   { params }: { params: { userId: string; storeId: string } }
 ) {
   try {
-
     const { userId } = auth();
 
     const body = await req.json();
@@ -58,6 +54,13 @@ export async function POST(
       sizes,
       isArchived,
     } = body;
+
+    const formattedPrice = Number(price.replace("$", ""));
+    const formattedDiscount = parseFloat(discount);
+    const totalPrice =
+      formattedPrice - formattedPrice * (formattedDiscount / 100);
+
+    console.log(totalPrice);
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -78,20 +81,27 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
+    console.log(storeByUserId);
+
     const product = await prismadb.product.create({
       data: {
-        storeId: storeByUserId.id,
+        store: {
+          connect: { id: storeByUserId.id },
+        },
         photo,
         name,
-        sku: sku || "N/A",
+        sku,
         description,
-        price,
-        discount,
+        price: formattedPrice,
+        discount: formattedDiscount,
+        totalPrice: totalPrice,
         category,
         sizes,
         isArchived,
       },
     });
+
+    console.log(product);
 
     return NextResponse.json(product);
   } catch (error) {

@@ -21,7 +21,7 @@ const NameInput: React.FC<NameInputProps> = ({ control, loading }) => {
       control={control}
       name="name"
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full">
           <FormControl>
             <Input {...field} placeholder="Name" disabled={loading} />
           </FormControl>

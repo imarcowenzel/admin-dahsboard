@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Store {
@@ -18,41 +19,46 @@ model Store {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  storeId     String
-  store       Store    @relation("StoreToProduct", fields: [storeId], references: [id])
+  id          String      @id @default(uuid())
+  storeId     String // Foreign Key to Store
+  store       Store       @relation("StoreToProduct", fields: [storeId], references: [id])
   photo       String
   name        String
-  sku         String
-  description String   @db.VarChar(600)
+  sku         String      @default("N/A")
+  description String      @db.VarChar(600)
   price       Decimal
   discount    Decimal
+  totalPrice  Decimal
   category    String
   sizes       String
-  isArchived  Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  OrderItem   OrderItem[]
+  isArchived  Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@index([storeId])
 }
 
 model Order {
-  id        String   @id @default(uuid())
-  storeId   String
-  store     Store    @relation("StoreToOrder", fields: [storeId], references: [id])
-  isPaid    Boolean  @default(false)
-  phone     String   @default("")
-  address   String   @default("")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String      @id @default(uuid())
+  storeId    String      // Foreign Key to Store
+  store      Store       @relation("StoreToOrder", fields: [storeId], references: [id])
+  orderItems OrderItem[] // Relation to OrderItem model
+  isPaid     Boolean     @default(false)
+  phone      String      @default("")
+  address    String      @default("")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   @@index([storeId])
 }
 
 model OrderItem {
-  id        String @id @default(uuid())
-  orderId   String
-  productId String
+  id        String  @id @default(uuid())
+  orderId   String  // Foreign Key to Store
+  Order     Order   @relation(fields: [orderId], references: [id])
+  productId String  // Foreign Key to Store
+  product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])

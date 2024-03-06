@@ -36,8 +36,8 @@ const ProductForm = ({ initialData }: { initialData: Product | null }) => {
   const defaultValues = initialData
     ? {
         ...initialData,
-        price: parseFloat(String(initialData?.price)),
-        discount: parseFloat(String(initialData?.discount)),
+        price: String(initialData?.price),
+        discount: String(initialData?.discount),
       }
     : {
         ...productSchema,
@@ -66,55 +66,58 @@ const ProductForm = ({ initialData }: { initialData: Product | null }) => {
   }
 
   return (
-
     <section className="mt-5 flex justify-center">
-
       <Form {...form}>
-
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col w-full lg:w-1/2 gap-y-5"
         >
-
           <PhotoInput
             control={form.control}
             loading={form.formState.isSubmitting}
           />
 
-          <NameInput
-            control={form.control}
-            loading={form.formState.isSubmitting}
-          />
-
-          <SKUInput
-            control={form.control}
-            loading={form.formState.isSubmitting}
-          />
+          <div className="flex gap-2">
+            <NameInput
+              control={form.control}
+              loading={form.formState.isSubmitting}
+            />
+            <SKUInput
+              control={form.control}
+              loading={form.formState.isSubmitting}
+            />
+          </div>
 
           <DescriptionTextarea
             control={form.control}
             loading={form.formState.isSubmitting}
           />
 
-          <PriceInput
-            control={form.control}
-            loading={form.formState.isSubmitting}
-          />
+          <div className="flex gap-2">
+            <PriceInput
+              control={form.control}
+              loading={form.formState.isSubmitting}
+              setValue={form.setValue}
+            />
 
-          <DiscountInput
-            control={form.control}
-            loading={form.formState.isSubmitting}
-          />
+            <DiscountInput
+              control={form.control}
+              loading={form.formState.isSubmitting}
+              setValue={form.setValue}
+              form={form}
+            />
+          </div>
 
-          <CategorySelect
-            control={form.control}
-            loading={form.formState.isSubmitting}
-          />
-
-          <SizesInput
-            control={form.control}
-            loading={form.formState.isSubmitting}
-          />
+          <div className="flex gap-2">
+            <CategorySelect
+              control={form.control}
+              loading={form.formState.isSubmitting}
+            />
+            <SizesInput
+              control={form.control}
+              loading={form.formState.isSubmitting}
+            />
+          </div>
 
           <IsArchivedSwitch
             control={form.control}
@@ -128,11 +131,8 @@ const ProductForm = ({ initialData }: { initialData: Product | null }) => {
           >
             {!form.formState.isSubmitting ? action : loading}
           </Button>
-
         </form>
-
       </Form>
-
     </section>
   );
 };

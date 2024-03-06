@@ -21,7 +21,7 @@ const SKUInput: React.FC<SKUInputProps> = ({ control, loading }) => {
       control={control}
       name="sku"
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full">
           <FormControl>
             <Input {...field} placeholder="SKU" disabled={loading} />
           </FormControl>

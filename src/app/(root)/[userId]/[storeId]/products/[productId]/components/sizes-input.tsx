@@ -21,7 +21,7 @@ const SizesInput: React.FC<SizesInputProps> = ({ control, loading }) => {
       control={control}
       name="sizes"
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full">
           <FormControl>
             <Input
               {...field}

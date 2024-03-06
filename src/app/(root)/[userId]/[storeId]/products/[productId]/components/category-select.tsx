@@ -30,7 +30,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({
       control={control}
       name="category"
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full">
           <FormControl>
             <Select
               onValueChange={field.onChange}

@@ -11,10 +11,10 @@ export const productSchema = z.object({
   description: z
     .string()
     .min(10, { message: "Please provide a description for the product." }),
-  price: z.coerce
-    .number()
+  price: z
+    .string()
     .min(1, { message: "Please provide a price for the product." }),
-  discount: z.coerce.number().optional(),
+  discount: z.string().default("0"),
   category: z
     .string()
     .min(1, { message: "Please provide a category for the product." }),
