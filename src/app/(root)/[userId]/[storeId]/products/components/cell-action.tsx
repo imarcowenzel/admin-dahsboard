@@ -27,6 +27,7 @@ export const CellAction = ({ data }: { data: ProductColumn }) => {
 
  async function onConfirm() {
     try {
+      // TODO: delete from uploadthing
       setLoading(true);
       await axios.delete(`/api/${storeId}/products/${data.id}`);
       toast.success("Product deleted.");
