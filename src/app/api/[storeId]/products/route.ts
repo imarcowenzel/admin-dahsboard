@@ -10,25 +10,39 @@ export async function GET(
     const { searchParams } = new URL(req.url);
     const createdAt = searchParams.get("createdAt") || undefined;
     const price = searchParams.get("price") || undefined;
+    const totalPrice = searchParams.get("totalPrice") || undefined;
+    const isArchivedQueryParam = searchParams.get("isArchived");
+    const sortField = searchParams.get("sortField") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    const isArchived =
+      isArchivedQueryParam === "true"
+        ? true
+        : isArchivedQueryParam === "false"
+        ? false
+        : undefined;
 
     const products = await prismadb.product.findMany({
       where: {
         storeId: params.storeId,
         createdAt,
         price,
-        isArchived: false,
+        totalPrice,
+        isArchived: isArchived || undefined,
       },
-      orderBy: {
-        createdAt: "asc", // Ordenar pelo createdAt em ordem ascendente
+      include: {
+        photo: true,
       },
+      orderBy: [
+        {
+          [sortField]: sortOrder as "asc" | "desc",
+        },
+      ],
     });
 
-    console.log("[PRODUCTS_GET] Params:", params);
-    console.log("[PRODUCTS_GET] Query Params:", req.url);
-
     return NextResponse.json(products);
-  } catch (error) {
-    console.log("[PRODUCTS_GET]", error);
+  } catch (error: any) {
+    console.error(error);
 
     return new NextResponse("Internal error", { status: 500 });
   }
@@ -42,7 +56,6 @@ export async function POST(
     const { userId } = auth();
 
     const body = await req.json();
-
     const {
       photo,
       name,
@@ -55,15 +68,46 @@ export async function POST(
       isArchived,
     } = body;
 
-    const formattedPrice = Number(price.replace("$", ""));
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (!photo) {
+      return new NextResponse("Photo is required", { status: 400 });
+    }
+
+    if (!name) {
+      return new NextResponse("Name is required", { status: 400 });
+    }
+
+    if (!description) {
+      return new NextResponse("Description is required", { status: 400 });
+    }
+
+    if (!price) {
+      return new NextResponse("Price is required", { status: 400 });
+    }
+
+    const formattedPrice = Number(body.price.replace("$", ""));
+
+    if (!discount) {
+      return new NextResponse("Discount is required", { status: 400 });
+    }
+
     const formattedDiscount = parseFloat(discount);
     const totalPrice =
       formattedPrice - formattedPrice * (formattedDiscount / 100);
 
-    console.log(totalPrice);
+    if (!category) {
+      return new NextResponse("Category is required", { status: 400 });
+    }
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+    if (!sizes) {
+      return new NextResponse("Sizes is required", { status: 400 });
+    }
+
+    if (isArchived === undefined) {
+      return new NextResponse("isArchived is required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -81,20 +125,20 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    console.log(storeByUserId);
-
     const product = await prismadb.product.create({
       data: {
         store: {
           connect: { id: storeByUserId.id },
         },
-        photo,
+        photo: {
+          create: { url: photo.url, key: photo.key },
+        },
         name,
         sku,
         description,
         price: formattedPrice,
         discount: formattedDiscount,
-        totalPrice: totalPrice,
+        totalPrice,
         category,
         sizes,
         isArchived,
@@ -104,8 +148,9 @@ export async function POST(
     console.log(product);
 
     return NextResponse.json(product);
-  } catch (error) {
-    console.log("[PRODUCTS_POST]", error);
+  } catch (error: any) {
+    console.error(error);
+
     return new NextResponse("Internal error", { status: 500 });
   }
 }

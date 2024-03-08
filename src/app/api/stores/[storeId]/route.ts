@@ -11,7 +11,6 @@ export async function PATCH(
     const { userId } = auth();
 
     const body = await req.json();
-
     const { name } = body;
 
     if (!userId) {
@@ -32,23 +31,28 @@ export async function PATCH(
         userId,
       },
       data: {
-        name
-      }
+        name,
+      },
     });
-  
-    return NextResponse.json(store);
-  } catch (error) {
-    console.log('[STORE_PATCH]', error);
-    return new NextResponse("Internal error", { status: 500 });
-  }
-};
 
+    return NextResponse.json(store);
+
+  } catch (error: any) {
+
+    console.error(error);
+
+    return new NextResponse("Internal error", { status: 500 });
+
+  }
+}
 
 export async function DELETE(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
+
   try {
+
     const { userId } = auth();
 
     if (!userId) {
@@ -62,13 +66,17 @@ export async function DELETE(
     const store = await prismadb.store.deleteMany({
       where: {
         id: params.storeId,
-        userId
-      }
+        userId,
+      },
     });
-  
+
     return NextResponse.json(store);
-  } catch (error) {
-    console.log('[STORE_DELETE]', error);
+
+  } catch (error: any) {
+
+    console.error(error);
+
     return new NextResponse("Internal error", { status: 500 });
+
   }
-};
+}

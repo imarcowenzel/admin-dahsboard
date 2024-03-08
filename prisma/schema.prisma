@@ -22,7 +22,7 @@ model Product {
   id          String      @id @default(uuid())
   storeId     String // Foreign Key to Store
   store       Store       @relation("StoreToProduct", fields: [storeId], references: [id])
-  photo       String
+  photo       Photo[] // Relation to Image model
   name        String
   sku         String      @default("N/A")
   description String      @db.VarChar(600)
@@ -39,9 +39,21 @@ model Product {
   @@index([storeId])
 }
 
+model Photo {
+  id        String   @id @default(uuid())
+  productId String // Foreign Key to Product
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String // URL of the image
+  key       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
 model Order {
   id         String      @id @default(uuid())
-  storeId    String      // Foreign Key to Store
+  storeId    String // Foreign Key to Store
   store      Store       @relation("StoreToOrder", fields: [storeId], references: [id])
   orderItems OrderItem[] // Relation to OrderItem model
   isPaid     Boolean     @default(false)
@@ -55,9 +67,9 @@ model Order {
 
 model OrderItem {
   id        String  @id @default(uuid())
-  orderId   String  // Foreign Key to Store
+  orderId   String // Foreign Key to Store
   Order     Order   @relation(fields: [orderId], references: [id])
-  productId String  // Foreign Key to Store
+  productId String // Foreign Key to Store
   product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])

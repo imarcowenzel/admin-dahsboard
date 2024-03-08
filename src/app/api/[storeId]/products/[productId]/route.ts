@@ -7,25 +7,22 @@ export async function GET(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-    
-    const { searchParams } = new URL(req.url);
-    const name = searchParams.get("name") || undefined;
-
-    if (!params.productId) {
-      return new NextResponse("Product id is required", { status: 400 });
+    if (!params.storeId) {
+      return new NextResponse("Store Id is required", { status: 400 });
     }
 
     const product = await prismadb.product.findUnique({
       where: {
         storeId: params.storeId,
         id: params.productId,
-        name,
       },
+      include: { photo: true },
     });
 
     return NextResponse.json(product);
-  } catch (error) {
-    console.log("[PRODUCT_GET]", error);
+  } catch (error: any) {
+    console.error(error);
+
     return new NextResponse("Internal error", { status: 500 });
   }
 }
@@ -38,9 +35,17 @@ export async function PATCH(
     const { userId } = auth();
 
     const body = await req.json();
-
-    const { photo, name, sku, description, price, discount, category, sizes, isArchived } =
-      body;
+    const {
+      photo,
+      name,
+      sku,
+      description,
+      price,
+      discount,
+      category,
+      sizes,
+      isArchived,
+    } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -48,6 +53,44 @@ export async function PATCH(
 
     if (!params.productId) {
       return new NextResponse("Product id is required", { status: 400 });
+    }
+
+    if (!photo) {
+      return new NextResponse("Photo is required", { status: 400 });
+    }
+
+    if (!name) {
+      return new NextResponse("Name is required", { status: 400 });
+    }
+
+    if (!description) {
+      return new NextResponse("Description is required", { status: 400 });
+    }
+
+    if (!price) {
+      return new NextResponse("Price is required", { status: 400 });
+    }
+
+    const formattedPrice = Number(body.price.replace("$", ""));
+
+    if (!discount) {
+      return new NextResponse("Discount is required", { status: 400 });
+    }
+
+    const formattedDiscount = parseFloat(discount);
+    const totalPrice =
+      formattedPrice - formattedPrice * (formattedDiscount / 100);
+
+    if (!category) {
+      return new NextResponse("Category is required", { status: 400 });
+    }
+
+    if (!sizes) {
+      return new NextResponse("Sizes is required", { status: 400 });
+    }
+
+    if (isArchived === undefined) {
+      return new NextResponse("isArchived is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -67,12 +110,15 @@ export async function PATCH(
       },
       data: {
         storeId: storeByUserId.id,
-        photo,
+        photo: {
+          create: { url: photo.url, key: photo.key },
+        },
         name,
-        sku: sku || "N/A",
+        sku,
         description,
-        price,
-        discount,
+        price: formattedPrice,
+        discount: formattedDiscount,
+        totalPrice,
         category,
         sizes,
         isArchived,
@@ -81,7 +127,8 @@ export async function PATCH(
 
     return NextResponse.json(product);
   } catch (error) {
-    console.log("[PRODUCT_PATCH]", error);
+    console.error(error);
+
     return new NextResponse("Internal error", { status: 500 });
   }
 }
@@ -120,7 +167,7 @@ export async function DELETE(
 
     return NextResponse.json(product);
   } catch (error) {
-    console.log("[PRODUCT_DELETE]", error);
+    console.error(error);
 
     return new NextResponse("Internal error", { status: 500 });
   }

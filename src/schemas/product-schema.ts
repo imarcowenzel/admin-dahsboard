@@ -1,9 +1,7 @@
 import * as z from "zod";
 
 export const productSchema = z.object({
-  photo: z
-    .string()
-    .min(1, { message: "Please upload a photo for the product." }),
+  photo: z.object({ url: z.string(), key: z.string() }),
   name: z
     .string()
     .min(1, { message: "Please provide a name for the product." }),
@@ -24,7 +22,7 @@ export const productSchema = z.object({
       message: "Sizes should only contain letters, numbers, and commas.",
     })
     .min(1, { message: "Please provide at least one size for the product." }),
-  isArchived: z.boolean().optional(),
+  isArchived: z.boolean().optional().default(false),
 });
 
 export const settingsSchema = z.object({

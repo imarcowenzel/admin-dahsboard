@@ -1,10 +1,11 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
-import { Store } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
+
   try {
+
     const { userId } = auth();
 
     if (!userId) {
@@ -18,19 +19,23 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json(stores);
-  } catch (error) {
-    console.log("[STORES_GET]", error);
+
+  } catch (error: any) {
+
+    console.error(error);
+
     return new NextResponse("Internal error", { status: 500 });
+
   }
 }
 
 export async function POST(req: Request) {
+
   try {
+
     const { userId } = auth();
 
     const body = await req.json();
-    console.log(body);
-
     const { name } = body;
 
     if (!userId) {
@@ -49,8 +54,12 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(store);
-  } catch (error) {
-    console.log("[STORES_POST]", error);
+
+  } catch (error: any) {
+
+    console.error(error);
+
     return new NextResponse("Internal error", { status: 500 });
+
   }
 }

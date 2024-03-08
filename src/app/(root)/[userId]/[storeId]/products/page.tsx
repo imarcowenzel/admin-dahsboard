@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import prismadb from "@/lib/prismadb";
-import { formatter } from "@/lib/utils";
+import { currencyformatter, percentageFormatter } from "@/lib/utils";
 import { ProductColumn, columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 
@@ -26,8 +26,9 @@ const ProductsPage = async ({
     id: item.id,
     name: item.name,
     isArchived: item.isArchived,
-    price: formatter.format(item.price.toNumber()),
-    discount: formatter.format(item.discount.toNumber()),
+    price: currencyformatter.format(Number(item.price)),
+    discount: percentageFormatter.format(Number(item.discount) / 100),
+    totalPrice: currencyformatter.format(Number(item.totalPrice)),
     category: item.category,
     sizes: item.sizes.split(",").join(" - "),
     createdAt: format(item.createdAt, "MMMM do, yyyy"),

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Product } from "@prisma/client";
+import { Photo, Product } from "@prisma/client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -21,7 +21,11 @@ import PriceInput from "./price-input";
 import SizesInput from "./sizes-input";
 import SKUInput from "./sku-input";
 
-const ProductForm = ({ initialData }: { initialData: Product | null }) => {
+const ProductForm = ({
+  initialData,
+}: {
+  initialData: (Product & { photo: Photo[] }) | null;
+}) => {
   
   const { userId, storeId, productId } = useParams();
   const router = useRouter();
@@ -38,10 +42,11 @@ const ProductForm = ({ initialData }: { initialData: Product | null }) => {
         ...initialData,
         price: String(initialData?.price),
         discount: String(initialData?.discount),
+        photo: { url: initialData.photo[0].url, key: initialData.photo[0].key },
       }
     : {
         ...productSchema,
-        photo: "",
+        photo: { url: "", key: "" },
       };
 
   const form = useForm<ProductSchema>({

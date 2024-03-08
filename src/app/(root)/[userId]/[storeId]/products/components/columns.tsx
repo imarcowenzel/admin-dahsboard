@@ -10,6 +10,7 @@ export type ProductColumn = {
   isArchived: boolean;
   price: string;
   discount: string;
+  totalPrice: string;
   category: string;
   sizes: string;
   createdAt: string;
@@ -31,6 +32,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "discount",
     header: "Discount",
+  },
+  {
+    accessorKey: "totalPrice",
+    header: "Total",
   },
   {
     accessorKey: "category",
