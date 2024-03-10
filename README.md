@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ADMIN DASHBOARD - A Modern Fullstack Marketplace Dashboard
 
-## Getting Started
+Admin Dashboard is a full-stack web application developed with Next.js, Clerk, MySQL, UploadThing, Tailwind CSS, shadcn/ui e Zustand.
 
-First, run the development server:
+## Technologies Used
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Next.js](https://nextjs.org/): React framework for server-side and client-side rendering (Server Side Render and Client Side Render).
+- [Clerk](https://clerk.com/): a complete suite of embeddable UIs, flexible APIs, and admin dashboards to authenticate and manage your users.
+- [MySQL](https://www.mysql.com/): SQL database for storing user data, posts, and more.
+- [uploadthing](https://uploadthing.com/): file upload tool for TypeScript and Next.js applications.
+- [Tailwind CSS](https://tailwindcss.com/): utility-first CSS framework for custom styling.
+- [shadcn/ui](https://ui.shadcn.com/): beautifully designed components that you can copy and paste into your apps.
+- [Zustand](https://zustand-demo.pmnd.rs/): Bear necessities for state management in React.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🛠️ Complete dashboard built from scratch in Next.js 14
+- 💳 Full admin dashboard
+- 🔑 Authentication using Clerk
+- 🌟 Clean, modern UI using shadcn-ui
+- ⌨️ 100% written in TypeScript
+- 🎁 ...much more
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Planned Features
 
-## Learn More
+We are continually working on new features and improvements for Sneaker Peek. Some of the features planned for the future include:
 
-To learn more about Next.js, take a look at the following resources:
+- And many more exciting functionalities!
+  
+## Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Make sure you have the following tools installed:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
 
-## Deploy on Vercel
+## How to Run the Project
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone this repository:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```bash
+   git clone https://github.com/imarcowenzel/admin-dahsboard

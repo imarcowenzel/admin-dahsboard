@@ -19,27 +19,48 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { ProductColumn } from "./columns";
 
 export const CellAction = ({ data }: { data: ProductColumn }) => {
-  
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { userId, storeId } = useParams();
 
- async function onConfirm() {
+  async function onConfirm() {
+
     try {
-      // TODO: delete from uploadthing
+
       setLoading(true);
+
+      const product = await axios.get(`/api/${storeId}/products/${data.id}`);
+
+      if (product.status !== 200) {
+        toast.error("Failed to delete the product. Please try again.");
+        return;
+      }
+
+      const { id, key } = product.data.photo[0];
+
+      const photoToDelete = await axios.delete("/api/uploadthing", {
+        data: { id, key },
+      });
+
+      if (photoToDelete.data.success !== true) {
+        toast.error("Failed to delete the product. Please try again.");
+        return;
+      }
+
       await axios.delete(`/api/${storeId}/products/${data.id}`);
+
       toast.success("Product deleted.");
+
       router.refresh();
-    } catch (error) {
-      console.log(error);
-      toast.success("Failed to delete the product. Please try again.");
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error("Failed to delete the product. Please try again.");
     } finally {
       setLoading(false);
       setOpen(false);
     }
-  };
+  }
 
   return (
     <>
