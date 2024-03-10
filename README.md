@@ -25,6 +25,9 @@ Admin Dashboard is a full-stack web application developed with Next.js, Clerk, M
 
 We are continually working on new features and improvements for Sneaker Peek. Some of the features planned for the future include:
 
+- Create an "Order" API with Stripe.
+- Make "Total Revenue" and "Sales" numbers dynamic.
+- Add a graph to the landing page.
 - And many more exciting functionalities!
   
 ## Prerequisites
