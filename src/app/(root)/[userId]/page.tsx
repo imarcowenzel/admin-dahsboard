@@ -1,13 +1,16 @@
-import prismadb from "@/lib/prismadb";
 import { auth, currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
+import prismadb from "@/lib/prismadb";
 import MainTabs from "./components/tabs";
 
 const HomePage = async () => {
+
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
+
   const user = await currentUser();
+  
   const stores = await prismadb.store.findMany({
     where: {
       userId,

@@ -4,12 +4,14 @@ import Stripe from "stripe";
 import prismadb from "@/lib/prismadb";
 import { stripe } from "@/lib/stripe";
 
+// CORS headers for allowing cross-origin requests
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
+// Handling OPTIONS requests for CORS preflight checks
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
@@ -18,7 +20,10 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productIds } = await req.json();
+
+  const {productIds} = await req.json();
+
+  console.log(productIds)
 
   if (!productIds || productIds.length === 0) {
     return new NextResponse("Product Ids are required", { status: 400 });
@@ -34,6 +39,7 @@ export async function POST(
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
+  // Iterate through products and add them to line_items
   products.forEach((product) => {
     line_items.push({
       quantity: 1,
@@ -63,6 +69,7 @@ export async function POST(
     },
   });
 
+  // Create a new checkout session with Stripe
   const session = await stripe.checkout.sessions.create({
     line_items,
     mode: "payment",
@@ -77,6 +84,7 @@ export async function POST(
     },
   });
 
+  // Return the checkout session URL in the response
   return NextResponse.json(
     { url: session.url },
     {

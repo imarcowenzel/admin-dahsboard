@@ -19,9 +19,9 @@ const SettingsPage = async ({ params }: { params: { storeId: string } }) => {
   if (!store) redirect("/");
 
   return (
-    <div className="mt-5">
+    <article className="mt-5">
       <SettingsForm initialData={store} />
-    </div>
+    </article>
   );
 };
 

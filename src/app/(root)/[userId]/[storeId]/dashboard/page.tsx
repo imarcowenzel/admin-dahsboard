@@ -31,7 +31,7 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
   ];
   
   return (
-    <section className="flex-[2] flex items-center justify-between mt-5 gap-x-5">
+    <article className="flex-[2] flex items-center justify-between mt-5 gap-x-5">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 w-full">
         {cardsData.map((card) => (
           <Card key={card.title} className="w-full">
@@ -47,7 +47,7 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
           </Card>
         ))}
       </div>
-    </section>
+    </article>
   );
 };
 

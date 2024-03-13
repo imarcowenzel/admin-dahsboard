@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { menuItems } from "@/utils/data";
 
 const MobileNavbar = ({ stores }: { stores: Store[] }) => {
-
   const { user } = useUser();
   const { userId, storeId } = useParams();
   const pathname = usePathname();
@@ -28,7 +27,6 @@ const MobileNavbar = ({ stores }: { stores: Store[] }) => {
 
   return (
     <Sheet>
-
       <SheetTrigger
         asChild
         className="md:hidden bg-transparent border-none p-0"
@@ -39,7 +37,6 @@ const MobileNavbar = ({ stores }: { stores: Store[] }) => {
       </SheetTrigger>
 
       <SheetContent side="left">
-        
         <SheetHeader>
           <div className="gap-5 py-5 flex items-center justify-between">
             <div className="gap-3 flex items-center justify-start">
