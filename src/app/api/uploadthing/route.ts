@@ -1,8 +1,8 @@
 import { createRouteHandler } from "uploadthing/next";
+import { NextResponse } from "next/server";
+import { UTApi } from "uploadthing/server";
 
 import { ourFileRouter } from "./core";
-import { UTApi } from "uploadthing/server";
-import { NextResponse } from "next/server";
 
 // Export routes for Next App Router
 export const { GET, POST } = createRouteHandler({
@@ -14,8 +14,6 @@ export async function DELETE(req: Request) {
   try {
 
     const body = await req.json();
-
-    console.log(body)
 
     const utapi = new UTApi();
 

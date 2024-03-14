@@ -1,12 +1,12 @@
-import { auth } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
-  const { userId } = auth();
+  const user = await currentUser();
 
-  if (!userId) redirect("/sign-in");
+  if (!user) redirect("/sign-in");
 
-  if (userId) redirect(`/${userId}`);
+  if (user) redirect(`/${user.id}`);
 
   return null;
 };

@@ -1,44 +1,38 @@
-import prismadb from "@/lib/prismadb";
-import { auth } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
+import prismadb from "@/lib/prismadb";
+
 export async function GET() {
-
   try {
+    const user = await currentUser();
 
-    const { userId } = auth();
-
-    if (!userId) {
+    if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const stores = await prismadb.store.findMany({
       where: {
-        userId,
+        userId: user.id,
       },
     });
 
     return NextResponse.json(stores);
-
   } catch (error: any) {
-
     console.error(error);
 
     return new NextResponse("Internal error", { status: 500 });
-
   }
 }
 
 export async function POST(req: Request) {
-
   try {
-
-    const { userId } = auth();
+    const user = await currentUser();
 
     const body = await req.json();
     const { name } = body;
 
-    if (!userId) {
+    if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -49,17 +43,14 @@ export async function POST(req: Request) {
     const store = await prismadb.store.create({
       data: {
         name,
-        userId,
+        userId: user.id,
       },
     });
 
     return NextResponse.json(store);
-
   } catch (error: any) {
-
     console.error(error);
 
     return new NextResponse("Internal error", { status: 500 });
-
   }
 }
