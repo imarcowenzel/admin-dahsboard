@@ -1,12 +1,9 @@
 import {
-  CreditCardIcon,
-  DollarSignIcon,
-    LayoutDashboardIcon,
-    LucideIcon,
-    PackageIcon,
-    SettingsIcon,
-    ShoppingBagIcon,
-    ShoppingCartIcon,
+  LayoutDashboardIcon,
+  LucideIcon,
+  SettingsIcon,
+  ShoppingBagIcon,
+  ShoppingCartIcon
 } from "lucide-react";
 
 export const menuItems: { title: string; path: string; icon: LucideIcon }[] = [

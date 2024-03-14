@@ -29,6 +29,7 @@ model Product {
   price       Decimal
   discount    Decimal
   totalPrice  Decimal
+  quantity    Decimal
   category    String
   sizes       String
   OrderItem   OrderItem[]

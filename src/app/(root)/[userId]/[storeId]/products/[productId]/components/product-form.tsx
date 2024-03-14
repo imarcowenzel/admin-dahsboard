@@ -18,6 +18,7 @@ import IsArchivedSwitch from "./is-archived-switch";
 import NameInput from "./name-input";
 import PhotoInput from "./photo-input";
 import PriceInput from "./price-input";
+import QuantityInput from "./quantity-input";
 import SizesInput from "./sizes-input";
 import SKUInput from "./sku-input";
 
@@ -26,7 +27,6 @@ const ProductForm = ({
 }: {
   initialData: (Product & { photo: Photo[] }) | null;
 }) => {
-  
   const { userId, storeId, productId } = useParams();
   const router = useRouter();
 
@@ -42,6 +42,7 @@ const ProductForm = ({
         ...initialData,
         price: String(initialData?.price),
         discount: String(initialData?.discount),
+        quantity: String(initialData?.quantity),
         photo: { url: initialData.photo[0].url, key: initialData.photo[0].key },
       }
     : {
@@ -55,6 +56,7 @@ const ProductForm = ({
   });
 
   async function onSubmit(data: ProductSchema) {
+    console.log(data);
     try {
       if (initialData) {
         await axios.patch(`/api/${storeId}/products/${productId}`, data);
@@ -112,6 +114,11 @@ const ProductForm = ({
               form={form}
             />
           </div>
+
+          <QuantityInput
+            control={form.control}
+            loading={form.formState.isSubmitting}
+          />
 
           <div className="flex gap-2">
             <CategorySelect

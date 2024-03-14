@@ -11,13 +11,12 @@ const HomePage = async () => {
   if (!userId) redirect("/sign-in");
 
   const user = await currentUser();
-  
+
   const stores = await prismadb.store.findMany({
     where: {
       userId,
     },
   });
-
 
   return (
     <main className="flex flex-col h-svh items-center justify-center gap-5 p-5 bg-secondary dark:bg-dark-primary">

@@ -26,6 +26,7 @@ const ProductsPage = async ({
     id: item.id,
     name: item.name,
     isArchived: item.isArchived,
+    quantity: Number(item.quantity),
     price: currencyformatter.format(Number(item.price)),
     discount: percentageFormatter.format(Number(item.discount) / 100),
     totalPrice: currencyformatter.format(Number(item.totalPrice)),

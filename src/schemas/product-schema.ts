@@ -13,6 +13,12 @@ export const productSchema = z.object({
     .string()
     .min(1, { message: "Please provide a price for the product." }),
   discount: z.string().default("0"),
+  quantity: z
+    .string()
+    .min(1, { message: "Please provide a quantity for the product." })
+    .regex(/^[0-9]+$/, {
+      message: "Quantity should only contain numbers.",
+    }),
   category: z
     .string()
     .min(1, { message: "Please provide a category for the product." }),

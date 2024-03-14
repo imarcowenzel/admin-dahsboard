@@ -6,16 +6,15 @@ export async function GET(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-
   try {
-
     const { searchParams } = new URL(req.url);
     const createdAt = searchParams.get("createdAt") || undefined;
     const price = searchParams.get("price") || undefined;
-    const totalPrice = searchParams.get("totalPrice") || undefined;
     const isArchivedQueryParam = searchParams.get("isArchived");
-    const sortField = searchParams.get("sortField") || "createdAt";
-    const sortOrder = searchParams.get("sortOrder") || "desc";
+    const maxPrice = searchParams.get("maxPrice") || undefined;
+    const minPrice = searchParams.get("minPrice") || undefined;
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const order = searchParams.get("order") || "desc";
 
     const isArchived =
       isArchivedQueryParam === "true"
@@ -24,12 +23,16 @@ export async function GET(
         ? false
         : undefined;
 
+    const minPriceValue =
+      typeof minPrice !== "undefined" ? parseFloat(minPrice) : undefined;
+    const maxPriceValue =
+      typeof maxPrice !== "undefined" ? parseFloat(maxPrice) : undefined;
+
     const products = await prismadb.product.findMany({
       where: {
         storeId: params.storeId,
         createdAt,
-        price,
-        totalPrice,
+        totalPrice: { gte: minPriceValue, lte: maxPriceValue } || price,
         isArchived: isArchived || undefined,
       },
       include: {
@@ -37,7 +40,7 @@ export async function GET(
       },
       orderBy: [
         {
-          [sortField]: sortOrder as "asc" | "desc",
+          [sortBy]: order as "asc" | "desc",
         },
       ],
     });
@@ -55,8 +58,7 @@ export async function POST(
   { params }: { params: { userId: string; storeId: string } }
 ) {
   try {
-
-    const {userId} = auth()
+    const { userId } = auth();
 
     const body = await req.json();
     const {
@@ -66,6 +68,7 @@ export async function POST(
       description,
       price,
       discount,
+      quantity,
       category,
       sizes,
       isArchived,
@@ -98,8 +101,15 @@ export async function POST(
     }
 
     const formattedDiscount = parseFloat(discount);
+
     const totalPrice =
       formattedPrice - formattedPrice * (formattedDiscount / 100);
+
+    if (!quantity) {
+      return new NextResponse("Quantity is required", { status: 400 });
+    }
+
+    const formattedQuantity = parseFloat(quantity);
 
     if (!category) {
       return new NextResponse("Category is required", { status: 400 });
@@ -141,7 +151,8 @@ export async function POST(
         description,
         price: formattedPrice,
         discount: formattedDiscount,
-        totalPrice,
+        totalPrice: Math.round(totalPrice),
+        quantity: formattedQuantity,
         category,
         sizes,
         isArchived,

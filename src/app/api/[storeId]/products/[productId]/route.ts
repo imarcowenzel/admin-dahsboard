@@ -6,9 +6,7 @@ export async function GET(
   req: Request,
   { params }: { params: { storeId: string; productId: string } }
 ) {
-  
   try {
-
     if (!params.storeId) {
       return new NextResponse("Store Id is required", { status: 400 });
     }
@@ -34,8 +32,7 @@ export async function PATCH(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-
-    const {userId} = auth()
+    const { userId } = auth();
 
     const body = await req.json();
     const {
@@ -45,6 +42,7 @@ export async function PATCH(
       description,
       price,
       discount,
+      quantity,
       category,
       sizes,
       isArchived,
@@ -84,6 +82,12 @@ export async function PATCH(
     const totalPrice =
       formattedPrice - formattedPrice * (formattedDiscount / 100);
 
+    if (!quantity) {
+      return new NextResponse("Quantity is required", { status: 400 });
+    }
+
+    const formattedQuantity = parseFloat(quantity);
+
     if (!category) {
       return new NextResponse("Category is required", { status: 400 });
     }
@@ -122,6 +126,7 @@ export async function PATCH(
         price: formattedPrice,
         discount: formattedDiscount,
         totalPrice,
+        quantity: formattedQuantity,
         category,
         sizes,
         isArchived,
@@ -141,8 +146,7 @@ export async function DELETE(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-
-    const {userId} = auth()
+    const { userId } = auth();
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
