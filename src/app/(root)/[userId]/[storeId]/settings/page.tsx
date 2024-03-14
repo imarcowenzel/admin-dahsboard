@@ -1,13 +1,9 @@
-import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 import prismadb from "@/lib/prismadb";
 import SettingsForm from "./components/settings-form";
 
 const SettingsPage = async ({ params }: { params: { storeId: string } }) => {
-  const user = await currentUser();
-
-  if (!user) redirect("/sign-in");
 
   const store = await prismadb.store.findUnique({
     where: {

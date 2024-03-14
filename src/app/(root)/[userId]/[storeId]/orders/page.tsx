@@ -4,7 +4,8 @@ import prismadb from "@/lib/prismadb";
 import { currencyformatter } from "@/lib/utils";
 import { OrderColumn, columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
-import { Product } from "@prisma/client";
+
+export const revalidate = 0;
 
 const OrdersPage = async ({
   params,
