@@ -7,6 +7,7 @@ export async function GET(
   { params }: { params: { storeId: string } }
 ) {
   try {
+    
     const { searchParams } = new URL(req.url);
     const createdAt = searchParams.get("createdAt") || undefined;
     const price = searchParams.get("price") || undefined;
@@ -15,6 +16,9 @@ export async function GET(
     const minPrice = searchParams.get("minPrice") || undefined;
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const order = searchParams.get("order") || "desc";
+    const query = searchParams.get("query") || undefined;
+
+    console.log(query);
 
     const isArchived =
       isArchivedQueryParam === "true"
@@ -34,6 +38,9 @@ export async function GET(
         createdAt,
         totalPrice: { gte: minPriceValue, lte: maxPriceValue } || price,
         isArchived: isArchived || undefined,
+        name: {
+          contains: query,
+        },
       },
       include: {
         photo: true,
@@ -45,8 +52,12 @@ export async function GET(
       ],
     });
 
+    console.log(products)
+
     return NextResponse.json(products);
+
   } catch (error: any) {
+
     console.error(error);
 
     return new NextResponse("Internal error", { status: 500 });
