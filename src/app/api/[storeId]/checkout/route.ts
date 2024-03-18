@@ -3,6 +3,13 @@ import Stripe from "stripe";
 
 import prismadb from "@/lib/prismadb";
 import { stripe } from "@/lib/stripe";
+import { Product } from "@prisma/client";
+
+interface Item {
+  product: Product;
+  quantity: number;
+  selectedSize: string | null;
+}
 
 // CORS headers for allowing cross-origin requests
 const corsHeaders = {
@@ -20,14 +27,13 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
+  const { items } = await req.json();
 
-  const {productIds} = await req.json();
-
-  console.log(productIds)
-
-  if (!productIds || productIds.length === 0) {
-    return new NextResponse("Product Ids are required", { status: 400 });
+  if (!items || items.length === 0) {
+    return new NextResponse("Items are required", { status: 400 });
   }
+
+  const productIds = items.map((item: Item) => item.product.id);
 
   const products = await prismadb.product.findMany({
     where: {
@@ -41,8 +47,12 @@ export async function POST(
 
   // Iterate through products and add them to line_items
   products.forEach((product) => {
+    const quantity = items.find(
+      (item: Item) => item.product.id === product.id
+    ).quantity;
+
     line_items.push({
-      quantity: 1,
+      quantity: quantity,
       price_data: {
         currency: "USD",
         product_data: {
