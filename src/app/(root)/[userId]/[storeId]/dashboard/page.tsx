@@ -9,17 +9,22 @@ import { getStockCount } from "@/actions/get-stock-count";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTotalRevenue } from "@/actions/get-total-revenue";
 import { getSalesCount } from "@/actions/get-sales-count";
+import { Overview } from "@/components/overview";
+import { getGraphRevenue } from "@/actions/get-graph-revenue";
+import { currencyformatter } from '../../../../../lib/utils';
 
 const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
+
   const stockCount = await getStockCount(params.storeId);
   const totalRevenue = await getTotalRevenue(params.storeId);
   const salesCount = await getSalesCount(params.storeId);
+  const graphRevenue = await getGraphRevenue(params.storeId)
 
-  const cardsData: { title: string; icon: LucideIcon; content: number }[] = [
+  const cardsData: { title: string; icon: LucideIcon; content: number | string }[] = [
     {
       title: "Total Revenue",
       icon: DollarSignIcon,
-      content: totalRevenue,
+      content: currencyformatter.format(totalRevenue),
     },
     {
       title: "Sales",
@@ -34,7 +39,7 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
   ];
 
   return (
-    <article className="flex-[2] flex items-center justify-between mt-5 gap-x-5">
+    <article className="flex-[2] flex flex-col items-center justify-between mt-5 gap-5">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 w-full">
         {cardsData.map((card) => (
           <Card key={card.title} className="w-full">
@@ -50,6 +55,7 @@ const DashboardPage = async ({ params }: { params: { storeId: string } }) => {
           </Card>
         ))}
       </div>
+      <Overview data={graphRevenue} />
     </article>
   );
 };

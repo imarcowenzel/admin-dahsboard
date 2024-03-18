@@ -43,15 +43,12 @@
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "react-hot-toast": "^2.4.1",
-    "react-number-format": "^5.3.3",
-    "react-select": "^5.8.0",
     "react-spinners": "^0.13.8",
     "recharts": "^2.12.2",
     "stripe": "^14.19.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^6.4.1",
-    "use-mask-input": "^3.3.7",
     "zod": "^3.22.4"
   },
   "devDependencies": {
