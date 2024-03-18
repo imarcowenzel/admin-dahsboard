@@ -56,7 +56,6 @@ const ProductForm = ({
   });
 
   async function onSubmit(data: ProductSchema) {
-    console.log(data);
     try {
       if (initialData) {
         await axios.patch(`/api/${storeId}/products/${productId}`, data);
@@ -67,7 +66,7 @@ const ProductForm = ({
       router.refresh();
       toast.success(toastSuccess);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(toastError);
     }
   }

@@ -18,8 +18,6 @@ export async function GET(
     const order = searchParams.get("order") || "desc";
     const query = searchParams.get("query") || undefined;
 
-    console.log(query);
-
     const isArchived =
       isArchivedQueryParam === "true"
         ? true
@@ -51,8 +49,6 @@ export async function GET(
         },
       ],
     });
-
-    console.log(products)
 
     return NextResponse.json(products);
 
@@ -169,8 +165,6 @@ export async function POST(
         isArchived,
       },
     });
-
-    console.log(product);
 
     return NextResponse.json(product);
   } catch (error: any) {
