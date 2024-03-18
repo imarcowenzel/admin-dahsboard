@@ -6,9 +6,8 @@ import { stripe } from "@/lib/stripe";
 import prismadb from "@/lib/prismadb";
 
 export async function POST(req: Request) {
-
   const body = await req.text();
-  
+
   const signature = headers().get("Stripe-Signature") as string;
 
   let event: Stripe.Event;
@@ -62,6 +61,20 @@ export async function POST(req: Request) {
         id: {
           in: [...productIds],
         },
+      },
+      data: {
+        quantity: {
+          decrement: 1,
+        },
+      },
+    });
+
+    await prismadb.product.updateMany({
+      where: {
+        AND: [
+          { id: { in: [...productIds] } },
+          { quantity: { equals: 0 } },
+        ],
       },
       data: {
         isArchived: true,
