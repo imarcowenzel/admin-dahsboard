@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { storeId: string } }
 ) {
   try {
-    
+
     const { searchParams } = new URL(req.url);
     const createdAt = searchParams.get("createdAt") || undefined;
     const price = searchParams.get("price") || undefined;
@@ -22,19 +22,23 @@ export async function GET(
       isArchivedQueryParam === "true"
         ? true
         : isArchivedQueryParam === "false"
-        ? false
-        : undefined;
+          ? false
+          : undefined;
 
     const minPriceValue =
       typeof minPrice !== "undefined" ? parseFloat(minPrice) : undefined;
     const maxPriceValue =
       typeof maxPrice !== "undefined" ? parseFloat(maxPrice) : undefined;
 
+    const priceFilter = (minPriceValue !== undefined && maxPriceValue !== undefined)
+      ? { gte: minPriceValue, lte: maxPriceValue }
+      : (price ? { equals: parseFloat(price) } : undefined);
+
     const products = await prismadb.product.findMany({
       where: {
         storeId: params.storeId,
         createdAt,
-        totalPrice: { gte: minPriceValue, lte: maxPriceValue } || price,
+        totalPrice: priceFilter,
         isArchived: isArchived || undefined,
         name: {
           contains: query,
