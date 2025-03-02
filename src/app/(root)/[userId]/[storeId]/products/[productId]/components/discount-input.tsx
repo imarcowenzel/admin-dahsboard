@@ -23,7 +23,6 @@ interface DiscountInputProps {
 const DiscountInput: React.FC<DiscountInputProps> = ({
   control,
   loading,
-  setValue,
   form,
 }) => {
   const maskedInputRef = useMaskito({ options });

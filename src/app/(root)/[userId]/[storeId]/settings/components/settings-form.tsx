@@ -41,7 +41,7 @@ const SettingsForm = ({ initialData }: { initialData: Store }) => {
       router.refresh();
       toast.success("Store updated.");
     } catch (error: any) {
-      toast.error("Failed to update the store. Please try again.");
+      toast.error("Failed to update the store. Please try again.", error);
     }
   }
 
@@ -52,7 +52,7 @@ const SettingsForm = ({ initialData }: { initialData: Store }) => {
       router.push("/");
       toast.success("Store deleted.");
     } catch (error: any) {
-      toast.error("Failed to update the store. Please try again.");
+      toast.error("Failed to update the store. Please try again.", error);
     } finally {
       setOpen(false);
     }
